@@ -46,7 +46,7 @@ void *gestioneGyroAccelerometer();
 float dist(float a, float b);
 float get_x_rotation(float x, float y, float z );
 float get_y_rotation(float x, float y, float z );
-
+int i2cReadWordData_2c(int handle,int i2creg);
 
 //-----------------------------------------------------------------------------
 //	StartGestioneGyroAccelerometer
@@ -83,9 +83,11 @@ void *gestioneGyroAccelerometer()
 	int accel_zout = 0;
 
 
+	int test = 0;
+
 	initI2C_MPU6050();
 
-	if(i2cHandleMPU6050 > 0)
+	if(i2cHandleMPU6050 >= 0)
 	{
 		sprintf(debugSTR,"I2C Gyro i2cHandleMPU6050: %d",i2cHandleMPU6050);
 		TRACE4(1,"GYRO",VERDE,NERO_BG,debugSTR,0);
@@ -101,17 +103,28 @@ void *gestioneGyroAccelerometer()
 
 	while(1)
 	{
-		usleep(100000);
+		usleep(1000000);
 
-		gyro_xout = i2cReadWordData(i2cHandleMPU6050,0x43);
-		gyro_yout = i2cReadWordData(i2cHandleMPU6050,0x45);
-		gyro_zout = i2cReadWordData(i2cHandleMPU6050,0x47);
+		gyro_xout = i2cReadWordData_2c(i2cHandleMPU6050,0x43);
+		gyro_yout = i2cReadWordData_2c(i2cHandleMPU6050,0x45);
+		gyro_zout = i2cReadWordData_2c(i2cHandleMPU6050,0x47);
+
+		/*test = i2cReadWordData_2c(i2cHandleMPU6050,0x43);
+				gyro_xout = (((test >>0)&0x00FF) <<8) +  (((test >>8)&0x00FF) <<0);
+
+		test = i2cReadWordData_2c(i2cHandleMPU6050,0x45);
+		gyro_yout = (((test >>0)&0x00FF) <<8) +  (((test >>8)&0x00FF) <<0);
+
+		test = i2cReadWordData_2c(i2cHandleMPU6050,0x47);
+		gyro_zout = (((test >>0)&0x00FF) <<8) +  (((test >>8)&0x00FF) <<0);*/
 
 		accel_xout = i2cReadWordData(i2cHandleMPU6050,0x3b);
-		accel_yout = i2cReadWordData(i2cHandleMPU6050,0x3d);
-		accel_zout = i2cReadWordData(i2cHandleMPU6050,0x3f);
+		//accel_yout = i2cReadWordData(i2cHandleMPU6050,0x3d);
+		//accel_zout = i2cReadWordData(i2cHandleMPU6050,0x3f);
 
-
+		test = i2cReadWordData(i2cHandleMPU6050,0x3f);
+		accel_yout = (((test >>0)&0x00FF) <<0) +  (((test >>8)&0x00FF) <<8);
+		accel_zout = (((test >>0)&0x00FF) <<8) +  (((test >>8)&0x00FF) <<0);
 
 		gyro_xout_scaled = (float)gyro_xout / (float)131;
 		gyro_yout_scaled = (float)gyro_yout / (float)131;
@@ -175,4 +188,14 @@ float get_y_rotation(float x, float y, float z )
 
 	return radians * 180.0f / 3.14159265359f;
 
+}
+
+
+int i2cReadWordData_2c(int handle,int i2creg)
+{
+	int val = i2cReadWordData(handle,i2creg);
+	if (val >= 0x8000)
+	   return -((65535 - val) + 1);
+	   else
+	return val;
 }
