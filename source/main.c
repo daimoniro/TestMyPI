@@ -23,16 +23,17 @@
 #include "gestioneMotoriStepper.h"
 #include "udpServer.h"
 #include "pin_raspberry.h"
-
+#include "gyroAccelerometer.h"
 
 
 char debugSTR[256];
 
+
+extern int i2cHandleMPU6050;
+
 //--------------------------------------------------
 // Function declaration
 //--------------------------------------------------
-void showMenu();
-void switchMenu(char scelta);
 void sig_handler(int signo);
 
 
@@ -77,18 +78,12 @@ int main(int argc, char **argv)
 
 	StartTemperatureHumManagement();
 	StartDistanceSonarManagement();
-
+	StartGestioneGyroAccelerometer();
 
 	while(1)
 	{
-		/*showMenu();
-		c = getchar();
-		while(getchar() != '\n');
-		switchMenu(c);*/
 
 		sleep(2);
-
-
 	}
 
 	return 0;
@@ -104,44 +99,11 @@ void sig_handler(int signo)
 	 gpioPWM(PIN_MOTOR_1_PWM,0);
 	 gpioTerminate();
 
+	 if(i2cHandleMPU6050 > 0)
+		 i2cClose(i2cHandleMPU6050);
+
 	 exit(0);
 
-}
-
-//--------------------------------------------------
-// showMenu
-//--------------------------------------------------
-void showMenu()
-{
-		printf("a)....... Gestione I/O\n");
-		printf("b)....... Distance\n");
-		printf("c)....... Motori DC\n");
-		printf("d)....... Motori Servo\n");
-
-		printf("\nScelta menu': ");
-}
-
-
-//--------------------------------------------------
-// switchMenu
-//--------------------------------------------------
-void switchMenu(char scelta)
-{
-	switch(scelta)
-	{
-		case 'a':
-			gestioneIO();
-			break;
-		case 'b':
-		//	gestioneDistance();
-			break;
-		case 'c':
-			//gestioneMotoriDC();
-			break;
-		case 'd':
-			//gestioneMotoriServo();
-			break;
-	}
 }
 
 

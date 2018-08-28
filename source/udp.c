@@ -44,6 +44,17 @@ extern float tempDHT22;
 extern float humDHT22;
 extern int velMotoreDC_0;
 extern int velMotoreDC_1;
+
+extern float gyro_xout_scaled;
+extern float gyro_yout_scaled;
+extern float gyro_zout_scaled;
+
+extern float accel_xout_scaled;
+extern float accel_yout_scaled;
+extern float accel_zout_scaled;
+
+extern float x_rotation;
+extern float y_rotation;
 //-----------------------------------------------------------------------------
 //	StartUDPClientManagement
 //-----------------------------------------------------------------------------
@@ -95,14 +106,23 @@ int sendMainValueUDP()
 	bufferTx[21] = (unsigned char)velMotoreDC_0;
 	bufferTx[22] = (unsigned char)velMotoreDC_1;
 
+	memcpy(bufferTx + 23,&gyro_xout_scaled,sizeof(float));
+	memcpy(bufferTx + 27,&gyro_yout_scaled,sizeof(float));
+	memcpy(bufferTx + 31,&gyro_zout_scaled,sizeof(float));
+
+	memcpy(bufferTx + 35,&accel_xout_scaled,sizeof(float));
+	memcpy(bufferTx + 39,&accel_yout_scaled,sizeof(float));
+	memcpy(bufferTx + 43,&accel_zout_scaled,sizeof(float));
+
+	memcpy(bufferTx + 47,&x_rotation,sizeof(float));
+	memcpy(bufferTx + 51,&y_rotation,sizeof(float));
 
 
 
 	 bufferTx[0] = 0x23;
-	 bufferTx[23] = 0x37;
+	 bufferTx[55] = 0x37;
 
-	 return udpOutcomingClientUDP(bufferTx,24);
-
+	 return udpOutcomingClientUDP(bufferTx,56);
 
 }
 

@@ -9,6 +9,7 @@ C_SRCS += \
 ../source/gestioneIO.c \
 ../source/gestioneMotoriDC.c \
 ../source/gestioneMotoriStepper.c \
+../source/gyroAccelerometer.c \
 ../source/log.c \
 ../source/main.c \
 ../source/serverTCP.c \
@@ -22,6 +23,7 @@ OBJS += \
 ./source/gestioneIO.o \
 ./source/gestioneMotoriDC.o \
 ./source/gestioneMotoriStepper.o \
+./source/gyroAccelerometer.o \
 ./source/log.o \
 ./source/main.o \
 ./source/serverTCP.o \
@@ -35,6 +37,7 @@ C_DEPS += \
 ./source/gestioneIO.d \
 ./source/gestioneMotoriDC.d \
 ./source/gestioneMotoriStepper.d \
+./source/gyroAccelerometer.d \
 ./source/log.d \
 ./source/main.d \
 ./source/serverTCP.d \
