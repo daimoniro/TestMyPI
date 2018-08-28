@@ -95,6 +95,8 @@ void *gestioneGyroAccelerometer()
 	{
 		sprintf(debugSTR,"Errore I2C Gyro i2cHandleMPU6050: %d",i2cHandleMPU6050);
 		TRACE4(1,"GYRO",ROSSO,NERO_BG,debugSTR,0);
+
+		return NULL;
 	}
 
 	while(1)
