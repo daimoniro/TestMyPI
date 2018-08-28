@@ -13,6 +13,7 @@
 #include <stdlib.h>
 #include <pigpio.h>
 
+#include "debug.h"
 #include "gestioneIO.h"
 #include "udp.h"
 #include "serverTCP.h"
@@ -60,12 +61,12 @@ int main(int argc, char **argv)
 
 	if (gpioInitialise() < 0)
 	{
-	   printf("setup pigpio failed !\n");
+	   TRACE4(1,"MAIN",ROSSO,NERO_BG,"Setup pigpio failed ",0);
 	   return -1;
 	}
 	else
 	{
-	   printf("setup pigpio ok !\n");
+		 TRACE4(1,"MAIN",BIANCO,NERO_BG,"Setup pigpio OK ",0);
 	}
 
 	StartGestioneMotoriDC();
@@ -94,7 +95,7 @@ int main(int argc, char **argv)
 //--------------------------------------------------
 void sig_handler(int signo)
 {
-	 printf("received %d\n",signo);
+	// printf("received %d\n",signo);
 	 gpioPWM(PIN_MOTOR_0_PWM,0);
 	 gpioPWM(PIN_MOTOR_1_PWM,0);
 	 gpioTerminate();
