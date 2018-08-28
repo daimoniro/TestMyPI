@@ -12,10 +12,24 @@
 #include <pigpio.h>
 
 #include "pin_raspberry.h"
+#include "debug.h"
 
+//*****************************************************************************
+//	global Variable
+//*****************************************************************************
 float distanceSonar_0 = 0;
 float distanceSonar_1 = 0;
 
+
+
+//*****************************************************************************
+//	Extern Variable
+//*****************************************************************************
+extern char debugSTR[];
+
+//*****************************************************************************
+//	dichiarazione funzioni
+//*****************************************************************************
 void *gestioneDistance();
 void getDistance(unsigned char idSonarSendor);
 
@@ -32,21 +46,24 @@ void StartDistanceSonarManagement()
 
 }
 
+//-----------------------------------------------------------------------------
+//	gestioneDistance
+//-----------------------------------------------------------------------------
 void *gestioneDistance()
 {
 
-	printf("sonki 1");
+
 	gpioSetMode(TRIG_0, PI_OUTPUT);
 	gpioSetMode(ECHO_0, PI_INPUT);
 
 	gpioSetMode(TRIG_1, PI_OUTPUT);
 	gpioSetMode(ECHO_1, PI_INPUT);
-	printf("sonki 2");
 
-	// turn it off
+
+
 	gpioWrite(TRIG_0, 0);
 	gpioWrite(TRIG_1, 0);
-    printf("Waiting For Sensor To Settle\n");
+
     sleep(2);
 
 
@@ -54,7 +71,7 @@ void *gestioneDistance()
     while (1)
     {
     	getDistance(0);
-    	  usleep(100000);
+    	usleep(100000);
     	getDistance(1);
 
         usleep(100000);
@@ -89,7 +106,7 @@ void getDistance(unsigned char idSonarSendor)
    	   		break;
 
    	   default:
-   		   printf("Errore idSensor sbagliato!!!\n");
+   		  // printf("Errore idSensor sbagliato!!!\n");
    		   return;
    		   break;
    }
@@ -114,6 +131,9 @@ void getDistance(unsigned char idSonarSendor)
   //il pulse_duration è in ns quindi divido per 1000000 per arrivare ai ms
   distance = pulse_duration/1000000 *(345/2)/10;
  // printf("Sensor #%d --> pulse_duration: %f ms --> distance: %3.1f cm\n",idSonarSendor,pulse_duration/1000000,distance);
+
+   sprintf(debugSTR,"Sensor #%d --> pulse_duration: %f ms --> distance: %3.1f cm\n",idSonarSendor,pulse_duration/1000000,distance);
+   TRACE4(1,"SONAR",BIANCO,NERO_BG,debugSTR,0);
 
 	switch(idSonarSendor)
 	{

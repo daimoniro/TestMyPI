@@ -11,6 +11,7 @@
 #define	SET_OUTPUT					1
 #define SET_SPEED_MOTORDC			2
 #define SET_PWM_FREQUENCY_MOTORDC	3
+#define SET_PARAM_STEPPER_MOTOR		4
 
 void StartUDPServerManagement();
 

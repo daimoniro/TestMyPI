@@ -11,7 +11,6 @@
 #include <signal.h>
 #include <unistd.h>
 #include <stdlib.h>
-//#include <wiringPi.h>
 #include <pigpio.h>
 
 #include "gestioneIO.h"
@@ -21,8 +20,12 @@
 #include "distance.h"
 #include "tempHumSensor.h"
 #include "gestioneMotoriDC.h"
+#include "gestioneMotoriStepper.h"
 #include "udpServer.h"
 #include "pin_raspberry.h"
+
+
+
 char debugSTR[256];
 
 //--------------------------------------------------
@@ -47,12 +50,6 @@ int main(int argc, char **argv)
 	signal(2, sig_handler);
 
 
-	/*if(wiringPiSetup() == -1)
-	{
-		//when initialize wiring failed,print messageto screen
-			printf("setup wiringPi failed !");
-			return 1;
-	}*/
 
 
 
@@ -71,6 +68,7 @@ int main(int argc, char **argv)
 	}
 
 	StartGestioneMotoriDC();
+	StartGestioneMotoreStepper();
 
 	//StartTCPServerManagement();
 	StartUDPServerManagement();

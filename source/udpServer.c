@@ -21,6 +21,7 @@
 #include <pigpio.h>
 #include "debug.h"
 #include "gestioneMotoriDC.h"
+#include "gestioneMotoriStepper.h"
 #include "udpServer.h"
 
 #define BUFSIZE 64
@@ -62,12 +63,18 @@ void* UDPServer()
 	int optval;		/* flag value for setsockopt */
 	int n;			/* message byte size */
 
-	    int i = 0;
+	int i = 0;
 
-	    char tmp[8];
+	char tmp[8];
 
-	    unsigned short bytedaricevere  = 0;
-	    unsigned short byteRicevuti  = 0;
+	unsigned short bytedaricevere  = 0;
+	unsigned short byteRicevuti  = 0;
+
+
+	unsigned char runStepMotor = 0;
+	unsigned char direction = 0;
+	unsigned int delay = 0;
+	int steps  = 0;
 
 
 	portno = 12000;
@@ -163,16 +170,30 @@ void* UDPServer()
 					break;
 
 				case SET_SPEED_MOTORDC:
-					   sprintf(debugSTR,"SET_SPEED_MOTORDC --> vel_0: %d dir_0: %d vel_1: %d dir_1: %d",bufRx[3],bufRx[4],bufRx[5],bufRx[6]);
-					   TRACE4(1,"SERVER",VERDE,NERO_BG,debugSTR,0);
-					   setSpeedMotorDC(bufRx[3], bufRx[4],bufRx[5], bufRx[6]);
-					   break;
+				   sprintf(debugSTR,"SET_SPEED_MOTORDC --> vel_0: %d dir_0: %d vel_1: %d dir_1: %d",bufRx[3],bufRx[4],bufRx[5],bufRx[6]);
+				   TRACE4(1,"SERVER",VERDE,NERO_BG,debugSTR,0);
+				   setSpeedMotorDC(bufRx[3], bufRx[4],bufRx[5], bufRx[6]);
+				   break;
 
 				case SET_PWM_FREQUENCY_MOTORDC:
 				   sprintf(debugSTR,"SET_PWM_FREQUENCY_MOTORDC --> frequency: %d",bufRx[3] +(bufRx[4] <<8));
 				   TRACE4(1,"SERVER",VERDE,NERO_BG,debugSTR,0);
 
 				   setFrequencyPWMMotorDC(bufRx[3] +(bufRx[4] <<8));
+				   break;
+
+				case SET_PARAM_STEPPER_MOTOR:
+
+					runStepMotor = bufRx[3];
+					direction = bufRx[4];
+					delay = bufRx[5] + (bufRx[6] <<8) +(bufRx[7] <<16) + (bufRx[8] <<24);
+					steps  = bufRx[9] + (bufRx[10] <<8) +(bufRx[11] <<16) + (bufRx[12] <<24);
+
+					sprintf(debugSTR,"SET_PARAM_STEPPER_MOTOR --> runStepMotor: %d direction: %d delay: %d steps: %d",runStepMotor,direction,delay,steps);
+					TRACE4(1,"SERVER",VERDE,NERO_BG,debugSTR,0);
+
+					sequenceStepMotor(runStepMotor,direction,delay,steps);
+
 				   break;
 
 				default:

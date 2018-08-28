@@ -10,7 +10,9 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <unistd.h>
 #include <pigpio.h>
+
 #include "gestioneMotoriDC.h"
 #include "pin_raspberry.h"
 

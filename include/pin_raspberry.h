@@ -35,7 +35,11 @@
 #define PIN_MOTOR_1_IN2 10
 #define PIN_MOTOR_1_PWM 13
 
-
+//motore stepper
+#define PIN_MOTOR_STEPPER_IN1 7
+#define PIN_MOTOR_STEPPER_IN2 8
+#define PIN_MOTOR_STEPPER_IN3 9
+#define PIN_MOTOR_STEPPER_IN4 11
 
 
 #endif /* INCLUDE_PIN_RASPBERRY_H_ */

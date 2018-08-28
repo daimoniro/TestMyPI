@@ -301,11 +301,16 @@ void read_dht_data()
 		{
 			c = -c;
 		}
-		float f = c * 1.8f + 32;
-		printf( "Humidity = %.1f %% Temperature = %.1f *C (%.1f *F)\n", h, c, f );
+
+
+		sprintf(debugSTR,"DHT22 --> Humidity = %.1f %% Temperature = %.1f *C\n", h, c);
+		TRACE4(1,"TEMPERATURE",BIANCO,NERO_BG,debugSTR,0);
+
 		tempDHT22 = c;
 		humDHT22 = h;
-	}else  {
-		printf( "Data not good, skip\n" );
+	}
+	else
+	{
+		//printf( "Data not good, skip\n" );
 	}
 }
