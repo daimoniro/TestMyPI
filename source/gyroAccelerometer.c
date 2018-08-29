@@ -106,15 +106,27 @@ void *gestioneGyroAccelerometer()
 
 	while(1)
 	{
-		usleep(1000000);
+		usleep(100000);
 
-		accel_xout = (((int16_t)mpu6050_readByte(MPU6050_RA_ACCEL_XOUT_H)) << 8) | mpu6050_readByte(MPU6050_RA_ACCEL_XOUT_L);
+		/*accel_xout = (((int16_t)mpu6050_readByte(MPU6050_RA_ACCEL_XOUT_H)) << 8) | mpu6050_readByte(MPU6050_RA_ACCEL_XOUT_L);
 		accel_yout = (((int16_t)mpu6050_readByte(MPU6050_RA_ACCEL_YOUT_H)) << 8) | mpu6050_readByte(MPU6050_RA_ACCEL_YOUT_L);
 		accel_zout = (((int16_t)mpu6050_readByte(MPU6050_RA_ACCEL_ZOUT_H)) << 8) | mpu6050_readByte(MPU6050_RA_ACCEL_ZOUT_L);
+*/
+		accel_xout = (short)((unsigned short)(mpu6050_readByte(MPU6050_RA_ACCEL_XOUT_H) << 8) + (unsigned short)mpu6050_readByte(MPU6050_RA_ACCEL_XOUT_L));
+		accel_yout = (short)((unsigned short)(mpu6050_readByte(MPU6050_RA_ACCEL_YOUT_H) << 8) + (unsigned short)mpu6050_readByte(MPU6050_RA_ACCEL_YOUT_L));
+		accel_zout = (short)((unsigned short)(mpu6050_readByte(MPU6050_RA_ACCEL_ZOUT_H) << 8) + (unsigned short)mpu6050_readByte(MPU6050_RA_ACCEL_ZOUT_L));
 
-		gyro_xout = (((int16_t)mpu6050_readByte(MPU6050_RA_GYRO_XOUT_H)) << 8) | mpu6050_readByte(MPU6050_RA_GYRO_XOUT_L);
+		//accel_xout =i2cReadWordData_2c(i2cHandleMPU6050,MPU6050_RA_ACCEL_XOUT_H);
+		//accel_yout =i2cReadWordData_2c(i2cHandleMPU6050,MPU6050_RA_ACCEL_YOUT_H);
+		//accel_zout =i2cReadWordData_2c(i2cHandleMPU6050,MPU6050_RA_ACCEL_ZOUT_H);
+
+		/*gyro_xout = (((int16_t)mpu6050_readByte(MPU6050_RA_GYRO_XOUT_H)) << 8) | mpu6050_readByte(MPU6050_RA_GYRO_XOUT_L);
 		gyro_yout = (((int16_t)mpu6050_readByte(MPU6050_RA_GYRO_YOUT_H)) << 8) | mpu6050_readByte(MPU6050_RA_GYRO_YOUT_L);
-		gyro_zout = (((int16_t)mpu6050_readByte(MPU6050_RA_GYRO_ZOUT_H)) << 8) | mpu6050_readByte(MPU6050_RA_GYRO_ZOUT_L);
+		gyro_zout = (((int16_t)mpu6050_readByte(MPU6050_RA_GYRO_ZOUT_H)) << 8) | mpu6050_readByte(MPU6050_RA_GYRO_ZOUT_L);*/
+
+		gyro_xout = (short)((unsigned short)(mpu6050_readByte(MPU6050_RA_GYRO_XOUT_H) << 8) + (unsigned short)mpu6050_readByte(MPU6050_RA_GYRO_XOUT_L));
+		gyro_yout = (short)((unsigned short)(mpu6050_readByte(MPU6050_RA_GYRO_YOUT_H) << 8) + (unsigned short)mpu6050_readByte(MPU6050_RA_GYRO_YOUT_L));
+		gyro_zout = (short)((unsigned short)(mpu6050_readByte(MPU6050_RA_GYRO_ZOUT_H) << 8) + (unsigned short)mpu6050_readByte(MPU6050_RA_GYRO_ZOUT_L));
 
 
 
