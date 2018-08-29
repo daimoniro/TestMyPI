@@ -4,6 +4,7 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
+../source/compass.c \
 ../source/debug.c \
 ../source/distance.c \
 ../source/gestioneIO.c \
@@ -18,6 +19,7 @@ C_SRCS += \
 ../source/udpServer.c 
 
 OBJS += \
+./source/compass.o \
 ./source/debug.o \
 ./source/distance.o \
 ./source/gestioneIO.o \
@@ -32,6 +34,7 @@ OBJS += \
 ./source/udpServer.o 
 
 C_DEPS += \
+./source/compass.d \
 ./source/debug.d \
 ./source/distance.d \
 ./source/gestioneIO.d \

@@ -55,6 +55,10 @@ extern float accel_zout_scaled;
 
 extern float x_rotation;
 extern float y_rotation;
+
+extern float compass_xout_scaled;
+extern float compass_yout_scaled;
+extern float compass_zout_scaled;
 //-----------------------------------------------------------------------------
 //	StartUDPClientManagement
 //-----------------------------------------------------------------------------
@@ -91,7 +95,7 @@ void *UDPServerManagement(void *threadid)
 
 int sendMainValueUDP()
 {
-	 unsigned char bufferTx[64];
+	 unsigned char bufferTx[80];
 
 
 	memset(bufferTx,0,sizeof(bufferTx));
@@ -117,12 +121,15 @@ int sendMainValueUDP()
 	memcpy(bufferTx + 47,&x_rotation,sizeof(float));
 	memcpy(bufferTx + 51,&y_rotation,sizeof(float));
 
+	memcpy(bufferTx + 55,&compass_xout_scaled,sizeof(float));
+	memcpy(bufferTx + 59,&compass_yout_scaled,sizeof(float));
+	memcpy(bufferTx + 63,&compass_zout_scaled,sizeof(float));
 
 
 	 bufferTx[0] = 0x23;
-	 bufferTx[55] = 0x37;
+	 bufferTx[67] = 0x37;
 
-	 return udpOutcomingClientUDP(bufferTx,56);
+	 return udpOutcomingClientUDP(bufferTx,68);
 
 }
 

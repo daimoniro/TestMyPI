@@ -25,7 +25,7 @@
 #include "udpServer.h"
 #include "pin_raspberry.h"
 #include "gyroAccelerometer.h"
-
+#include "compass.h"
 
 char debugSTR[256];
 
@@ -80,6 +80,7 @@ int main(int argc, char **argv)
 	StartTemperatureHumManagement();
 	StartDistanceSonarManagement();
 	StartGestioneGyroAccelerometer();
+	StartGestioneCompass();
 
 	while(1)
 	{
