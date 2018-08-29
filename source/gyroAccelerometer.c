@@ -19,6 +19,7 @@
 
 #define	MPU_6050_ADDR 			0x68
 
+
 //--------------------------------------------------
 // variabili globali
 //--------------------------------------------------
@@ -47,6 +48,8 @@ float dist(float a, float b);
 float get_x_rotation(float x, float y, float z );
 float get_y_rotation(float x, float y, float z );
 int i2cReadWordData_2c(int handle,int i2creg);
+void mpu6050_init();
+static int8_t mpu6050_readByte(uint8_t regAddr);
 
 //-----------------------------------------------------------------------------
 //	StartGestioneGyroAccelerometer
@@ -83,15 +86,15 @@ void *gestioneGyroAccelerometer()
 	int accel_zout = 0;
 
 
-	int test = 0;
-
+	usleep(100000L);
 	initI2C_MPU6050();
 
 	if(i2cHandleMPU6050 >= 0)
 	{
 		sprintf(debugSTR,"I2C Gyro i2cHandleMPU6050: %d",i2cHandleMPU6050);
 		TRACE4(1,"GYRO",VERDE,NERO_BG,debugSTR,0);
-		i2cWriteByteData(i2cHandleMPU6050,0x6b,1);
+
+		mpu6050_init();
 	}
 	else
 	{
@@ -105,34 +108,23 @@ void *gestioneGyroAccelerometer()
 	{
 		usleep(1000000);
 
-		gyro_xout = i2cReadWordData_2c(i2cHandleMPU6050,0x43);
-		gyro_yout = i2cReadWordData_2c(i2cHandleMPU6050,0x45);
-		gyro_zout = i2cReadWordData_2c(i2cHandleMPU6050,0x47);
+		accel_xout = (((int16_t)mpu6050_readByte(MPU6050_RA_ACCEL_XOUT_H)) << 8) | mpu6050_readByte(MPU6050_RA_ACCEL_XOUT_L);
+		accel_yout = (((int16_t)mpu6050_readByte(MPU6050_RA_ACCEL_YOUT_H)) << 8) | mpu6050_readByte(MPU6050_RA_ACCEL_YOUT_L);
+		accel_zout = (((int16_t)mpu6050_readByte(MPU6050_RA_ACCEL_ZOUT_H)) << 8) | mpu6050_readByte(MPU6050_RA_ACCEL_ZOUT_L);
 
-		/*test = i2cReadWordData_2c(i2cHandleMPU6050,0x43);
-				gyro_xout = (((test >>0)&0x00FF) <<8) +  (((test >>8)&0x00FF) <<0);
+		gyro_xout = (((int16_t)mpu6050_readByte(MPU6050_RA_GYRO_XOUT_H)) << 8) | mpu6050_readByte(MPU6050_RA_GYRO_XOUT_L);
+		gyro_yout = (((int16_t)mpu6050_readByte(MPU6050_RA_GYRO_YOUT_H)) << 8) | mpu6050_readByte(MPU6050_RA_GYRO_YOUT_L);
+		gyro_zout = (((int16_t)mpu6050_readByte(MPU6050_RA_GYRO_ZOUT_H)) << 8) | mpu6050_readByte(MPU6050_RA_GYRO_ZOUT_L);
 
-		test = i2cReadWordData_2c(i2cHandleMPU6050,0x45);
-		gyro_yout = (((test >>0)&0x00FF) <<8) +  (((test >>8)&0x00FF) <<0);
 
-		test = i2cReadWordData_2c(i2cHandleMPU6050,0x47);
-		gyro_zout = (((test >>0)&0x00FF) <<8) +  (((test >>8)&0x00FF) <<0);*/
 
-		accel_xout = i2cReadWordData(i2cHandleMPU6050,0x3b);
-		//accel_yout = i2cReadWordData(i2cHandleMPU6050,0x3d);
-		//accel_zout = i2cReadWordData(i2cHandleMPU6050,0x3f);
+		gyro_xout_scaled = (float)gyro_xout / (float)MPU6050_GYRO_LSB_250;
+		gyro_yout_scaled = (float)gyro_yout / (float)MPU6050_GYRO_LSB_250;
+		gyro_zout_scaled = (float)gyro_zout / (float)MPU6050_GYRO_LSB_250;
 
-		test = i2cReadWordData(i2cHandleMPU6050,0x3f);
-		accel_yout = (((test >>0)&0x00FF) <<0) +  (((test >>8)&0x00FF) <<8);
-		accel_zout = (((test >>0)&0x00FF) <<8) +  (((test >>8)&0x00FF) <<0);
-
-		gyro_xout_scaled = (float)gyro_xout / (float)131;
-		gyro_yout_scaled = (float)gyro_yout / (float)131;
-		gyro_zout_scaled = (float)gyro_zout / (float)131;
-
-		accel_xout_scaled = (float)accel_xout / (float)16384;
-		accel_yout_scaled = (float)accel_yout / (float)16384;
-		accel_zout_scaled = (float)accel_zout / (float)16384;
+		accel_xout_scaled = (float)accel_xout / (float)MPU6050_ACCEL_LSB_2;
+		accel_yout_scaled = (float)accel_yout / (float)MPU6050_ACCEL_LSB_2;
+		accel_zout_scaled = (float)accel_zout / (float)MPU6050_ACCEL_LSB_2;
 
 		x_rotation = get_x_rotation(accel_xout_scaled,accel_yout_scaled,accel_zout_scaled);
 		y_rotation = get_y_rotation(accel_xout_scaled,accel_yout_scaled,accel_zout_scaled);
@@ -198,4 +190,88 @@ int i2cReadWordData_2c(int handle,int i2creg)
 	   return -((65535 - val) + 1);
 	   else
 	return val;
+}
+
+
+static void mpu6050_writeByte(uint8_t regAddr, uint8_t data)
+{
+  i2cWriteByteData(i2cHandleMPU6050, regAddr,data);
+}
+
+static int8_t mpu6050_readByte(uint8_t regAddr)
+{
+    return i2cReadByteData(i2cHandleMPU6050, regAddr);
+}
+
+static void mpu6050_writeBit(uint8_t regAddr, uint8_t bitNum, uint8_t data)
+{
+    uint8_t b;
+    b = mpu6050_readByte(regAddr);
+    b = (data != 0) ? (b | (1 << bitNum)) : (b & ~(1 << bitNum));
+    mpu6050_writeByte(regAddr, b);
+}
+
+
+static void mpu6050_setSleepDisabled()
+{
+	mpu6050_writeBit(MPU6050_RA_PWR_MGMT_1, MPU6050_PWR1_SLEEP_BIT, 0);
+}
+
+static void mpu6050_writeBits(uint8_t regAddr, uint8_t bitStart, uint8_t length, uint8_t data)
+{
+    //      010 value to write
+    // 76543210 bit numbers
+    //    xxx   args: bitStart=4, length=3
+    // 00011100 mask byte
+    // 10101111 original value (sample)
+    // 10100011 original & ~mask
+    // 10101011 masked | value
+	if(length > 0)
+	{
+		uint8_t b = 0;
+
+		b = mpu6050_readByte(regAddr);
+		//get current data
+		uint8_t mask = ((1 << length) - 1) << (bitStart - length + 1);
+		data <<= (bitStart - length + 1); // shift data into correct position
+		data &= mask; // zero all non-important bits in data
+		b &= ~(mask); // zero all important bits in existing byte
+		b |= data; // combine data with existing byte
+		mpu6050_writeByte(regAddr, b);
+
+	}
+}
+
+
+void mpu6050_init()
+{
+
+
+	//allow mpu6050 chip clocks to start up
+	usleep(100000L);
+
+	//set sleep disabled
+	mpu6050_setSleepDisabled();
+
+	//wake up delay needed sleep disabled
+	usleep(10000L);
+
+	//set clock source
+	//  it is highly recommended that the device be configured to use one of the gyroscopes
+	// (or an external clock source) as the clock reference for improved stability
+	mpu6050_writeBits(MPU6050_RA_PWR_MGMT_1, MPU6050_PWR1_CLKSEL_BIT, MPU6050_PWR1_CLKSEL_LENGTH, MPU6050_CLOCK_PLL_XGYRO);
+	//set DLPF bandwidth to 42Hz
+	mpu6050_writeBits(MPU6050_RA_CONFIG, MPU6050_CFG_DLPF_CFG_BIT, MPU6050_CFG_DLPF_CFG_LENGTH, MPU6050_DLPF_BW_42);
+    //set sampe rate
+	mpu6050_writeByte(MPU6050_RA_SMPLRT_DIV, 4); //1khz / (1 + 4) = 200Hz
+	//set gyro range
+	mpu6050_writeBits(MPU6050_RA_GYRO_CONFIG, MPU6050_GCONFIG_FS_SEL_BIT, MPU6050_GCONFIG_FS_SEL_LENGTH, MPU6050_GYRO_FS);
+	//set accel range
+	mpu6050_writeBits(MPU6050_RA_ACCEL_CONFIG, MPU6050_ACONFIG_AFS_SEL_BIT, MPU6050_ACONFIG_AFS_SEL_LENGTH, MPU6050_ACCEL_FS);
+
+	//enable i2c bypass by default for sensors connected to aux i2c bus
+	mpu6050_writeBit(MPU6050_RA_INT_PIN_CFG, MPU6050_INTCFG_I2C_BYPASS_EN_BIT, (1 << MPU6050_INTCFG_I2C_BYPASS_EN_BIT));
+	// disable master mode on the i2c aux bus
+	mpu6050_writeBit(MPU6050_RA_USER_CTRL, 5, 0);
+
 }
