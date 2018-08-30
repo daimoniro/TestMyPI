@@ -39,6 +39,7 @@ int sendMainValueUDP();
 
 extern float distanceSonar_0;
 extern float distanceSonar_1;
+extern float distanceSonar_2;
 extern float tempDS18D20;
 extern float tempDHT22;
 extern float humDHT22;
@@ -99,37 +100,37 @@ int sendMainValueUDP()
 
 
 	memset(bufferTx,0,sizeof(bufferTx));
-
+	bufferTx[0] = 0x23;
 
 	memcpy(bufferTx + 1,&tempDS18D20,sizeof(float));
 	memcpy(bufferTx + 5,&distanceSonar_0,sizeof(float));
 	memcpy(bufferTx + 9,&distanceSonar_1,sizeof(float));
-	memcpy(bufferTx + 13,&tempDHT22,sizeof(float));
-	memcpy(bufferTx + 17,&humDHT22,sizeof(float));
+	memcpy(bufferTx + 13,&distanceSonar_2,sizeof(float));
+	memcpy(bufferTx + 17,&tempDHT22,sizeof(float));
+	memcpy(bufferTx + 21,&humDHT22,sizeof(float));
 
-	bufferTx[21] = (unsigned char)velMotoreDC_0;
-	bufferTx[22] = (unsigned char)velMotoreDC_1;
+	bufferTx[25] = (unsigned char)velMotoreDC_0;
+	bufferTx[26] = (unsigned char)velMotoreDC_1;
 
-	memcpy(bufferTx + 23,&gyro_xout_scaled,sizeof(float));
-	memcpy(bufferTx + 27,&gyro_yout_scaled,sizeof(float));
-	memcpy(bufferTx + 31,&gyro_zout_scaled,sizeof(float));
+	memcpy(bufferTx + 27,&gyro_xout_scaled,sizeof(float));
+	memcpy(bufferTx + 31,&gyro_yout_scaled,sizeof(float));
+	memcpy(bufferTx + 35,&gyro_zout_scaled,sizeof(float));
 
-	memcpy(bufferTx + 35,&accel_xout_scaled,sizeof(float));
-	memcpy(bufferTx + 39,&accel_yout_scaled,sizeof(float));
-	memcpy(bufferTx + 43,&accel_zout_scaled,sizeof(float));
+	memcpy(bufferTx + 39,&accel_xout_scaled,sizeof(float));
+	memcpy(bufferTx + 43,&accel_yout_scaled,sizeof(float));
+	memcpy(bufferTx + 47,&accel_zout_scaled,sizeof(float));
 
-	memcpy(bufferTx + 47,&x_rotation,sizeof(float));
-	memcpy(bufferTx + 51,&y_rotation,sizeof(float));
+	memcpy(bufferTx + 51,&x_rotation,sizeof(float));
+	memcpy(bufferTx + 55,&y_rotation,sizeof(float));
 
-	memcpy(bufferTx + 55,&compass_xout_scaled,sizeof(float));
-	memcpy(bufferTx + 59,&compass_yout_scaled,sizeof(float));
-	memcpy(bufferTx + 63,&compass_zout_scaled,sizeof(float));
+	memcpy(bufferTx + 59,&compass_xout_scaled,sizeof(float));
+	memcpy(bufferTx + 63,&compass_yout_scaled,sizeof(float));
+	memcpy(bufferTx + 67,&compass_zout_scaled,sizeof(float));
 
 
-	 bufferTx[0] = 0x23;
-	 bufferTx[67] = 0x37;
+	bufferTx[71] = 0x37;
 
-	 return udpOutcomingClientUDP(bufferTx,68);
+	return udpOutcomingClientUDP(bufferTx,72);
 
 }
 

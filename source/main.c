@@ -26,11 +26,19 @@
 #include "pin_raspberry.h"
 #include "gyroAccelerometer.h"
 #include "compass.h"
+#include "gestioneServo.h"
 
+//--------------------------------------------------
+// variabili globali
+//--------------------------------------------------
 char debugSTR[256];
 
-
+//--------------------------------------------------
+// variabili extern
+//--------------------------------------------------
 extern int i2cHandleMPU6050;
+extern int i2cHandleHMC5883l;
+extern int i2cHandle_pca6585;
 
 //--------------------------------------------------
 // Function declaration
@@ -81,7 +89,7 @@ int main(int argc, char **argv)
 	StartDistanceSonarManagement();
 	StartGestioneGyroAccelerometer();
 	StartGestioneCompass();
-
+	StartGestioneServo();
 	while(1)
 	{
 
@@ -103,6 +111,12 @@ void sig_handler(int signo)
 
 	 if(i2cHandleMPU6050 > 0)
 		 i2cClose(i2cHandleMPU6050);
+
+	 if(i2cHandleHMC5883l > 0)
+		 i2cClose(i2cHandleHMC5883l);
+
+	 if(i2cHandle_pca6585 > 0)
+		 i2cClose(i2cHandle_pca6585);
 
 	 exit(0);
 
