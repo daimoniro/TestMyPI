@@ -17,7 +17,7 @@
 #include "debug.h"
 
 
-#define	HMC5883l_ADDR 			0x1e
+#define	HMC5883l_ADDR 			0x0d
 
 
 //--------------------------------------------------
@@ -77,14 +77,14 @@ void *gestioneCompass()
 	if(i2cHandleHMC5883l >= 0)
 	{
 		sprintf(debugSTR,"I2C Gyro initI2C_HMC5883l: %d",i2cHandleHMC5883l);
-		TRACE4(1,"GYRO",VERDE,NERO_BG,debugSTR,0);
+		TRACE4(1,"COMPASS",VERDE,NERO_BG,debugSTR,0);
 
 		hmc5883l_init();
 	}
 	else
 	{
 		sprintf(debugSTR,"Errore I2C Gyro initI2C_HMC5883l: %d",i2cHandleHMC5883l);
-		TRACE4(1,"GYRO",ROSSO,NERO_BG,debugSTR,0);
+		TRACE4(1,"COMPASS",ROSSO,NERO_BG,debugSTR,0);
 
 		return NULL;
 	}

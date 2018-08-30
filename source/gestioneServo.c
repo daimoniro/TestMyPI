@@ -18,7 +18,7 @@
 #include "debug.h"
 
 
-#define	PCA6585_ADDR 			0x1f
+#define	PCA6585_ADDR 			0x40
 #define SERVOMIN  150 // this is the 'minimum' pulse length count (out of 4096)
 #define SERVOMAX  600 // this is the 'maximum' pulse length count (out of 4096)
 
@@ -42,6 +42,8 @@ void PCA9685_reset(void);
 void PCA9685_setPWMFreq(float freq);
 void PCA9685_setPWM(uint8_t num, uint16_t on, uint16_t off);
 void loopPWMServo();
+void loopPWMServo_2();
+
 void setServoPulse(uint8_t n, double pulse);
 
 //-----------------------------------------------------------------------------
@@ -76,19 +78,24 @@ void *gestioneServo()
 
 	if(i2cHandle_pca6585 >= 0)
 	{
-		sprintf(debugSTR,"I2C Gyro initI2C_HMC5883l: %d",i2cHandle_pca6585);
+		sprintf(debugSTR,"I2C Gyro initI2C_PCA6585: %d",i2cHandle_pca6585);
 		TRACE4(1,"SERVO",VERDE,NERO_BG,debugSTR,0);
 
 		pca6585_init();
 	}
 	else
 	{
-		sprintf(debugSTR,"Errore I2C Gyro initI2C_HMC5883l: %d",i2cHandle_pca6585);
+		sprintf(debugSTR,"Errore I2C Gyro initI2C_PCA6585: %d",i2cHandle_pca6585);
 		TRACE4(1,"SERVO",ROSSO,NERO_BG,debugSTR,0);
 
 		return NULL;
 	}
 
+	//setServoPulse(0, 0);
+	//setServoPulse(1, 0);
+
+	//PCA9685_setPWM(0, 0, 0.0015);
+	//PCA9685_setPWM(2, 0, 0.0015);
 	while(1)
 	{
 		usleep(1000000);
@@ -187,21 +194,48 @@ void setServoPulse(uint8_t n, double pulse)
 void loopPWMServo()
 {
   // Drive each servo one at a time
-
+printf("loop servo\n");
   for (uint16_t pulselen = SERVOMIN; pulselen < SERVOMAX; pulselen++)
   {
 	  PCA9685_setPWM(servonum, 0, pulselen);
+	  usleep(10000);
+	  if((pulselen %100) == 0)printf("pulselen: %d\n",pulselen);
   }
 
   usleep(500000);
   for (uint16_t pulselen = SERVOMAX; pulselen > SERVOMIN; pulselen--)
   {
 	  PCA9685_setPWM(servonum, 0, pulselen);
+	  usleep(10000);
+	  if((pulselen %100) == 0)printf("pulselen: %d\n",pulselen);
   }
 
   usleep(500000);
 
   servonum ++;
   if (servonum > 2)
+	  servonum = 0;
+}
+
+
+//--------------------------------------------------
+// loopPWMServo
+//--------------------------------------------------
+void loopPWMServo_2()
+{
+  // Drive each servo one at a time
+printf("loop servo 2\n");
+  for (double pulselen = 0.0008; pulselen < 0.0019; pulselen += 0.00001)
+  {
+	  setServoPulse(servonum, pulselen);
+	  printf("pulselen: %f\n",pulselen);
+	  usleep(20000);
+  }
+
+
+
+
+  servonum ++;
+  if (servonum > 1)
 	  servonum = 0;
 }

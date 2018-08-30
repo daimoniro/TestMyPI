@@ -132,7 +132,7 @@ void getDistance(unsigned char idSonarSendor)
   distance = pulse_duration/1000000 *(345/2)/10;
  // printf("Sensor #%d --> pulse_duration: %f ms --> distance: %3.1f cm\n",idSonarSendor,pulse_duration/1000000,distance);
 
-   sprintf(debugSTR,"Sensor #%d --> pulse_duration: %f ms --> distance: %3.1f cm\n",idSonarSendor,pulse_duration/1000000,distance);
+   sprintf(debugSTR,"Sensor #%d --> pulse_duration: %f ms --> distance: %3.1f cm",idSonarSendor,pulse_duration/1000000,distance);
    TRACE4(1,"SONAR",BIANCO,NERO_BG,debugSTR,0);
 
 	switch(idSonarSendor)
