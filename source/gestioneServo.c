@@ -27,7 +27,10 @@
 //--------------------------------------------------
 int i2cHandle_pca6585 = -1;
 uint8_t servonum = 0;
+unsigned short freqPWMServo = 60;
 
+unsigned short posServo0 = 0;
+unsigned short posServo1 = 0;
 //--------------------------------------------------
 // variabili extern
 //--------------------------------------------------
@@ -92,7 +95,11 @@ void *gestioneServo()
 	while(1)
 	{
 		usleep(1000000);
-		loopPWMServo();
+
+		posServo1 = i2cReadWordData(i2cHandle_pca6585,LED0_ON_L+4*0 + 2); //leggo solo off dato chemetto on a 0
+		posServo1 = i2cReadWordData(i2cHandle_pca6585,LED0_ON_L+4*1 + 2); //leggo solo off dato chemetto on a 0
+
+		//loopPWMServo();
 	}
 }
 
@@ -103,7 +110,7 @@ void pca6585_init()
 {
 	PCA9685_reset();
 
-	PCA9685_setPWMFreq(60) ;
+	PCA9685_setPWMFreq(freqPWMServo) ;
 }
 
 //--------------------------------------------------
@@ -169,7 +176,7 @@ void setServoPulse(uint8_t n, double pulse)
   double pulselength;
 
   pulselength = 1000000;   // 1,000,000 us per second
-  pulselength /= 60;   // 60 Hz
+  pulselength /= freqPWMServo;   // 60 Hz
  // Serial.print(pulselength); Serial.println(" us per period");
   printf("us per period: %f\n",pulselength);
   pulselength /= 4096;  // 12 bits of resolution
@@ -204,4 +211,22 @@ void loopPWMServo()
   servonum ++;
   if (servonum > 2)
 	  servonum = 0;
+}
+
+//--------------------------------------------------
+// setSpeedServo
+//--------------------------------------------------
+void setSpeedServo(unsigned short servoSpeed_0, unsigned short servoSpeed_1)
+{
+	 PCA9685_setPWM(0, 0, servoSpeed_0);
+	 PCA9685_setPWM(1, 0, servoSpeed_1);
+}
+
+//--------------------------------------------------
+// setFrequencyServo
+//--------------------------------------------------
+void setFrequencyServo(unsigned short servoFrequency)
+{
+	PCA9685_setPWMFreq((float)servoFrequency);
+	freqPWMServo = servoFrequency;
 }

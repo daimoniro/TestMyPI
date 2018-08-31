@@ -10,7 +10,8 @@
 
 
 void StartGestioneServo();
-
+void setSpeedServo(unsigned short servoSpeed_0, unsigned short servoSpeed_1);
+void setFrequencyServo(unsigned short servoFrequency);
 
 #define PCA9685_SUBADR1 0x2
 #define PCA9685_SUBADR2 0x3

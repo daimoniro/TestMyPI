@@ -67,9 +67,9 @@ void initI2C_HMC5883l()
 //--------------------------------------------------
 void *gestioneCompass()
 {
-	int compass_xout = 0;
-	int compass_yout = 0;
-	int compass_zout = 0;
+	//int compass_xout = 0;
+	//int compass_yout = 0;
+	//int compass_zout = 0;
 
 	usleep(100000L);
 	initI2C_HMC5883l();
