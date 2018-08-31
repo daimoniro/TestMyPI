@@ -9,7 +9,7 @@
 #define INCLUDE_GESTIONEIO_H_
 
 
+void StartGestioneIO();
 
-void gestioneIO();
 
 #endif /* INCLUDE_GESTIONEIO_H_ */

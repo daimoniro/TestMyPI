@@ -77,10 +77,10 @@ int main(int argc, char **argv)
 		 TRACE4(1,"MAIN",BIANCO,NERO_BG,"Setup pigpio OK ",0);
 	}
 
+	StartGestioneIO();
 	StartGestioneMotoriDC();
 	StartGestioneMotoreStepper();
 
-	//StartTCPServerManagement();
 	StartUDPServerManagement();
 	StartUDPClientManagement();
 
@@ -90,9 +90,10 @@ int main(int argc, char **argv)
 	StartGestioneGyroAccelerometer();
 	StartGestioneCompass();
 	StartGestioneServo();
+
+
 	while(1)
 	{
-
 		sleep(2);
 	}
 
@@ -107,7 +108,6 @@ void sig_handler(int signo)
 	// printf("received %d\n",signo);
 	 gpioPWM(PIN_MOTOR_0_PWM,0);
 	 gpioPWM(PIN_MOTOR_1_PWM,0);
-	 gpioTerminate();
 
 	 if(i2cHandleMPU6050 > 0)
 		 i2cClose(i2cHandleMPU6050);
@@ -118,6 +118,13 @@ void sig_handler(int signo)
 	 if(i2cHandle_pca6585 > 0)
 		 i2cClose(i2cHandle_pca6585);
 
+	 gpioWrite(PIN_LED_VERDE, 0);   //led off
+	 gpioWrite(PIN_LED_ROSSO, 0);   //led off
+
+
+
+
+	 gpioTerminate();
 	 exit(0);
 
 }
