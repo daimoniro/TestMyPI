@@ -18,7 +18,7 @@
 #include "debug.h"
 
 
-#define	PCA6585_ADDR 			0x40
+#define	PCA6585_ADDR 			0x1f
 #define SERVOMIN  150 // this is the 'minimum' pulse length count (out of 4096)
 #define SERVOMAX  600 // this is the 'maximum' pulse length count (out of 4096)
 
@@ -27,7 +27,10 @@
 //--------------------------------------------------
 int i2cHandle_pca6585 = -1;
 uint8_t servonum = 0;
+unsigned short freqPWMServo = 60;
 
+unsigned short posServo0 = 0;
+unsigned short posServo1 = 0;
 //--------------------------------------------------
 // variabili extern
 //--------------------------------------------------
@@ -42,8 +45,6 @@ void PCA9685_reset(void);
 void PCA9685_setPWMFreq(float freq);
 void PCA9685_setPWM(uint8_t num, uint16_t on, uint16_t off);
 void loopPWMServo();
-void loopPWMServo_2();
-
 void setServoPulse(uint8_t n, double pulse);
 
 //-----------------------------------------------------------------------------
@@ -78,28 +79,27 @@ void *gestioneServo()
 
 	if(i2cHandle_pca6585 >= 0)
 	{
-		sprintf(debugSTR,"I2C Gyro initI2C_PCA6585: %d",i2cHandle_pca6585);
+		sprintf(debugSTR,"I2C Gyro initI2C_HMC5883l: %d",i2cHandle_pca6585);
 		TRACE4(1,"SERVO",VERDE,NERO_BG,debugSTR,0);
 
 		pca6585_init();
 	}
 	else
 	{
-		sprintf(debugSTR,"Errore I2C Gyro initI2C_PCA6585: %d",i2cHandle_pca6585);
+		sprintf(debugSTR,"Errore I2C Gyro initI2C_HMC5883l: %d",i2cHandle_pca6585);
 		TRACE4(1,"SERVO",ROSSO,NERO_BG,debugSTR,0);
 
 		return NULL;
 	}
 
-	//setServoPulse(0, 0);
-	//setServoPulse(1, 0);
-
-	//PCA9685_setPWM(0, 0, 0.0015);
-	//PCA9685_setPWM(2, 0, 0.0015);
 	while(1)
 	{
 		usleep(1000000);
-		loopPWMServo();
+
+		posServo1 = i2cReadWordData(i2cHandle_pca6585,LED0_ON_L+4*0 + 2); //leggo solo off dato chemetto on a 0
+		posServo1 = i2cReadWordData(i2cHandle_pca6585,LED0_ON_L+4*1 + 2); //leggo solo off dato chemetto on a 0
+
+		//loopPWMServo();
 	}
 }
 
@@ -110,7 +110,7 @@ void pca6585_init()
 {
 	PCA9685_reset();
 
-	PCA9685_setPWMFreq(60) ;
+	PCA9685_setPWMFreq(freqPWMServo) ;
 }
 
 //--------------------------------------------------
@@ -176,7 +176,7 @@ void setServoPulse(uint8_t n, double pulse)
   double pulselength;
 
   pulselength = 1000000;   // 1,000,000 us per second
-  pulselength /= 60;   // 60 Hz
+  pulselength /= freqPWMServo;   // 60 Hz
  // Serial.print(pulselength); Serial.println(" us per period");
   printf("us per period: %f\n",pulselength);
   pulselength /= 4096;  // 12 bits of resolution
@@ -194,20 +194,16 @@ void setServoPulse(uint8_t n, double pulse)
 void loopPWMServo()
 {
   // Drive each servo one at a time
-printf("loop servo\n");
+
   for (uint16_t pulselen = SERVOMIN; pulselen < SERVOMAX; pulselen++)
   {
 	  PCA9685_setPWM(servonum, 0, pulselen);
-	  usleep(10000);
-	  if((pulselen %100) == 0)printf("pulselen: %d\n",pulselen);
   }
 
   usleep(500000);
   for (uint16_t pulselen = SERVOMAX; pulselen > SERVOMIN; pulselen--)
   {
 	  PCA9685_setPWM(servonum, 0, pulselen);
-	  usleep(10000);
-	  if((pulselen %100) == 0)printf("pulselen: %d\n",pulselen);
   }
 
   usleep(500000);
@@ -217,25 +213,20 @@ printf("loop servo\n");
 	  servonum = 0;
 }
 
-
 //--------------------------------------------------
-// loopPWMServo
+// setSpeedServo
 //--------------------------------------------------
-void loopPWMServo_2()
+void setSpeedServo(unsigned short servoSpeed_0, unsigned short servoSpeed_1)
 {
-  // Drive each servo one at a time
-printf("loop servo 2\n");
-  for (double pulselen = 0.0008; pulselen < 0.0019; pulselen += 0.00001)
-  {
-	  setServoPulse(servonum, pulselen);
-	  printf("pulselen: %f\n",pulselen);
-	  usleep(20000);
-  }
+	 PCA9685_setPWM(0, 0, servoSpeed_0);
+	 PCA9685_setPWM(1, 0, servoSpeed_1);
+}
 
-
-
-
-  servonum ++;
-  if (servonum > 1)
-	  servonum = 0;
+//--------------------------------------------------
+// setFrequencyServo
+//--------------------------------------------------
+void setFrequencyServo(unsigned short servoFrequency)
+{
+	PCA9685_setPWMFreq((float)servoFrequency);
+	freqPWMServo = servoFrequency;
 }

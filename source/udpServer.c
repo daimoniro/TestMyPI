@@ -22,6 +22,8 @@
 #include "debug.h"
 #include "gestioneMotoriDC.h"
 #include "gestioneMotoriStepper.h"
+#include "gestioneServo.h"
+
 #include "udpServer.h"
 
 #define BUFSIZE 64
@@ -195,6 +197,21 @@ void* UDPServer()
 					sequenceStepMotor(runStepMotor,direction,delay,steps);
 
 				   break;
+
+				case SET_SPEED_SERVO:
+				   sprintf(debugSTR,"SET_SPEED_SERVO --> vel_0: %d  vel_1: %d",bufRx[3] +(bufRx[4] <<8),bufRx[5] +(bufRx[6] <<8));
+				   TRACE4(1,"SERVER",VERDE,NERO_BG,debugSTR,0);
+				   setSpeedServo(bufRx[3] +(bufRx[4] <<8),bufRx[5] +(bufRx[6] <<8));
+				   break;
+
+				case SET_PWM_FREQUENCY_SERVO:
+				   sprintf(debugSTR,"SET_PWM_FREQUENCY_SERVO --> frequency: %d",bufRx[3] +(bufRx[4] <<8));
+				   TRACE4(1,"SERVER",VERDE,NERO_BG,debugSTR,0);
+				   setFrequencyServo(bufRx[3] +(bufRx[4] <<8));
+
+
+				   break;
+
 
 				default:
 

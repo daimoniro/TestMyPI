@@ -11,11 +11,12 @@
 
 
 // io
-#define PIN_OUTPUT 17
-#define BUTTON_PIN	27
+#define PIN_LED_VERDE 		17
+#define PIN_LED_ROSSO 		18 //da provare
+#define BUTTON_PIN		27
 
 
-//temperature sendor
+//temperature sensor
 #define DHT_PIN		22
 #define DS1820_PIN	4
 
@@ -24,7 +25,8 @@
 #define ECHO_0 24
 #define TRIG_1 25
 #define ECHO_1 5
-
+#define TRIG_2 19 //da provare
+#define ECHO_2 20 //da provare
 
 //motor DC
 #define PIN_MOTOR_0_IN1 26
