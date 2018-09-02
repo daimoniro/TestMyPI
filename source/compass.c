@@ -76,14 +76,14 @@ void *gestioneCompass()
 
 	if(i2cHandleHMC5883l >= 0)
 	{
-		sprintf(debugSTR,"I2C Gyro initI2C_HMC5883l: %d",i2cHandleHMC5883l);
+		sprintf(debugSTR,"I2C Compass initI2C_HMC5883l: %d",i2cHandleHMC5883l);
 		TRACE4(1,"COMPASS",VERDE,NERO_BG,debugSTR,0);
 
 		hmc5883l_init();
 	}
 	else
 	{
-		sprintf(debugSTR,"Errore I2C Gyro initI2C_HMC5883l: %d",i2cHandleHMC5883l);
+		sprintf(debugSTR,"Errore I2C Compass initI2C_HMC5883l: %d",i2cHandleHMC5883l);
 		TRACE4(1,"COMPASS",ROSSO,NERO_BG,debugSTR,0);
 
 		return NULL;

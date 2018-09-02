@@ -28,6 +28,7 @@
 #define TRIG_2 19 //da provare
 #define ECHO_2 20 //da provare
 
+
 //motor DC
 #define PIN_MOTOR_0_IN1 26
 #define PIN_MOTOR_0_IN2 16

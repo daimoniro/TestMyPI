@@ -13,7 +13,7 @@
 
 #include "debug.h"
 #include "pin_raspberry.h"
-
+#include "main.h"
 
 //--------------------------------------------------
 // variabili extern
@@ -63,8 +63,14 @@ void *gestioneIO()
 		usleep(100000);
 
 
-		sprintf(debugSTR,"Stato PIN %d --> %d\n", BUTTON_PIN,gpioRead(BUTTON_PIN));
+		sprintf(debugSTR,"Stato PIN %d --> %d", BUTTON_PIN,gpioRead(BUTTON_PIN));
 		TRACE4(1,"IO",BIANCO,NERO_BG,debugSTR,0);
+
+		if(gpioRead(BUTTON_PIN) == 0)
+		{
+			closePigpioLybrary();
+			exit(0);
+		}
 	}
 }
 

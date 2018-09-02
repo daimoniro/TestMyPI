@@ -18,7 +18,7 @@
 #include "debug.h"
 
 
-#define	PCA6585_ADDR 			0x1f
+#define	PCA6585_ADDR 			0x40
 #define SERVOMIN  150 // this is the 'minimum' pulse length count (out of 4096)
 #define SERVOMAX  600 // this is the 'maximum' pulse length count (out of 4096)
 
@@ -27,7 +27,7 @@
 //--------------------------------------------------
 int i2cHandle_pca6585 = -1;
 uint8_t servonum = 0;
-unsigned short freqPWMServo = 60;
+unsigned short freqPWMServo = 50;
 
 unsigned short posServo0 = 0;
 unsigned short posServo1 = 0;
@@ -79,14 +79,14 @@ void *gestioneServo()
 
 	if(i2cHandle_pca6585 >= 0)
 	{
-		sprintf(debugSTR,"I2C Gyro initI2C_HMC5883l: %d",i2cHandle_pca6585);
+		sprintf(debugSTR,"I2C Servo i2cHandle_pca6585: %d",i2cHandle_pca6585);
 		TRACE4(1,"SERVO",VERDE,NERO_BG,debugSTR,0);
 
 		pca6585_init();
 	}
 	else
 	{
-		sprintf(debugSTR,"Errore I2C Gyro initI2C_HMC5883l: %d",i2cHandle_pca6585);
+		sprintf(debugSTR,"Errore I2C Servo i2cHandle_pca6585: %d",i2cHandle_pca6585);
 		TRACE4(1,"SERVO",ROSSO,NERO_BG,debugSTR,0);
 
 		return NULL;
@@ -96,8 +96,11 @@ void *gestioneServo()
 	{
 		usleep(1000000);
 
-		posServo1 = i2cReadWordData(i2cHandle_pca6585,LED0_ON_L+4*0 + 2); //leggo solo off dato chemetto on a 0
+		posServo0 = i2cReadWordData(i2cHandle_pca6585,LED0_ON_L+4*0 + 2); //leggo solo off dato chemetto on a 0
 		posServo1 = i2cReadWordData(i2cHandle_pca6585,LED0_ON_L+4*1 + 2); //leggo solo off dato chemetto on a 0
+
+		printf("%d %d %d %d\n",i2cReadByteData(i2cHandle_pca6585,LED0_ON_L + 0),i2cReadByteData(i2cHandle_pca6585,LED0_ON_L+ 1),i2cReadByteData(i2cHandle_pca6585,LED0_ON_L+ 2),i2cReadByteData(i2cHandle_pca6585,LED0_ON_L + 3));
+		printf("posServo0: %d\n",posServo0);
 
 		//loopPWMServo();
 	}

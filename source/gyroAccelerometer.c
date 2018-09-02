@@ -143,23 +143,23 @@ void *gestioneGyroAccelerometer()
 
 
 		sprintf(debugSTR,"gyro_xout: %d scaled: %f",gyro_xout, gyro_xout_scaled);
-		TRACE4(1,"GYRO",BIANCO,NERO_BG,debugSTR,0);
+		TRACE4(2,"GYRO",BIANCO,NERO_BG,debugSTR,0);
 		sprintf(debugSTR,"gyro_yout: %d scaled: %f",gyro_yout, gyro_yout_scaled);
-		TRACE4(1,"GYRO",BIANCO,NERO_BG,debugSTR,0);
+		TRACE4(2,"GYRO",BIANCO,NERO_BG,debugSTR,0);
 		sprintf(debugSTR,"gyro_zout: %d scaled: %f",gyro_zout, gyro_zout_scaled);
-		TRACE4(1,"GYRO",BIANCO,NERO_BG,debugSTR,0);
+		TRACE4(2,"GYRO",BIANCO,NERO_BG,debugSTR,0);
 
 		sprintf(debugSTR,"accel_xout: %d scaled: %f",accel_xout, accel_xout_scaled);
-		TRACE4(1,"GYRO",BIANCO,NERO_BG,debugSTR,0);
+		TRACE4(2,"GYRO",BIANCO,NERO_BG,debugSTR,0);
 		sprintf(debugSTR,"accel_yout: %d scaled: %f",accel_yout, accel_yout_scaled);
-		TRACE4(1,"GYRO",BIANCO,NERO_BG,debugSTR,0);
+		TRACE4(2,"GYRO",BIANCO,NERO_BG,debugSTR,0);
 		sprintf(debugSTR,"accel_zout: %d scaled: %f",accel_zout, accel_zout_scaled);
-		TRACE4(1,"GYRO",BIANCO,NERO_BG,debugSTR,0);
+		TRACE4(2,"GYRO",BIANCO,NERO_BG,debugSTR,0);
 
 		sprintf(debugSTR,"x_rotation: %f",x_rotation);
-		TRACE4(1,"GYRO",BIANCO,NERO_BG,debugSTR,0);
+		TRACE4(2,"GYRO",BIANCO,NERO_BG,debugSTR,0);
 		sprintf(debugSTR,"y_rotation: %f",y_rotation);
-		TRACE4(1,"GYRO",BIANCO,NERO_BG,debugSTR,0);
+		TRACE4(2,"GYRO",BIANCO,NERO_BG,debugSTR,0);
 
 	}
 }

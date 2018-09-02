@@ -44,7 +44,7 @@ extern int i2cHandle_pca6585;
 // Function declaration
 //--------------------------------------------------
 void sig_handler(int signo);
-
+void closePigpioLybrary();
 
 //--------------------------------------------------
 // main
@@ -54,10 +54,11 @@ int main(int argc, char **argv)
 
 	printf("\033[H\033[2J");
 
-	signal(SIGINT, sig_handler);
-	signal(SIGTERM, sig_handler);
-	signal(SIGKILL, sig_handler);
-	signal(2, sig_handler);
+	//signal(SIGINT, sig_handler);
+	//gpioSetSignalFunc(SIGINT, sig_handler);
+	//signal(SIGTERM, sig_handler);
+//	signal(SIGKILL, sig_handler);
+	//signal(SIGSEGV, sig_handler);
 
 
 
@@ -76,6 +77,10 @@ int main(int argc, char **argv)
 	{
 		 TRACE4(1,"MAIN",BIANCO,NERO_BG,"Setup pigpio OK ",0);
 	}
+
+
+	//signal(SIGINT, sig_handler);
+	gpioSetSignalFunc(SIGINT, sig_handler);
 
 	StartGestioneIO();
 	StartGestioneMotoriDC();
@@ -105,28 +110,35 @@ int main(int argc, char **argv)
 //--------------------------------------------------
 void sig_handler(int signo)
 {
-	// printf("received %d\n",signo);
-	 gpioPWM(PIN_MOTOR_0_PWM,0);
-	 gpioPWM(PIN_MOTOR_1_PWM,0);
-
-	 if(i2cHandleMPU6050 > 0)
-		 i2cClose(i2cHandleMPU6050);
-
-	 if(i2cHandleHMC5883l > 0)
-		 i2cClose(i2cHandleHMC5883l);
-
-	 if(i2cHandle_pca6585 > 0)
-		 i2cClose(i2cHandle_pca6585);
-
-	 gpioWrite(PIN_LED_VERDE, 0);   //led off
-	 gpioWrite(PIN_LED_ROSSO, 0);   //led off
-
-
-
-
-	 gpioTerminate();
+	 closePigpioLybrary();
 	 exit(0);
 
 }
+
+//--------------------------------------------------
+// closePigpioLybrary
+//--------------------------------------------------
+void closePigpioLybrary()
+{
+	gpioWrite(PIN_LED_VERDE, 0);   //led off
+	gpioWrite(PIN_LED_ROSSO, 0);   //led off
+	gpioPWM(PIN_MOTOR_0_PWM,0);
+	gpioPWM(PIN_MOTOR_1_PWM,0);
+
+	if(i2cHandleMPU6050 > 0)
+	 i2cClose(i2cHandleMPU6050);
+
+	if(i2cHandleHMC5883l > 0)
+	 i2cClose(i2cHandleHMC5883l);
+
+	if(i2cHandle_pca6585 > 0)
+	 i2cClose(i2cHandle_pca6585);
+
+
+	sleep(1);
+
+	gpioTerminate();
+}
+
 
 
