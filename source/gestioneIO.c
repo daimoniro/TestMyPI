@@ -51,6 +51,8 @@ void StartGestioneIO()
 //--------------------------------------------------
 void *gestioneIO()
 {
+	int statusLedRosso = 0;
+	int oldStatusLedRosso = -1;
 
 	gpioSetMode(PIN_LED_VERDE, PI_OUTPUT);
 	gpioSetMode(PIN_LED_ROSSO, PI_OUTPUT);
@@ -78,12 +80,18 @@ void *gestioneIO()
 
 		if((errorServo > SOGLIA_ERRORI) || (errorGyro > SOGLIA_ERRORI) || (errorCompass > SOGLIA_ERRORI))
 		{
-			gpioWrite(PIN_LED_ROSSO, 1);   //led on
+			statusLedRosso = 1;
+			if(statusLedRosso != oldStatusLedRosso)
+				gpioWrite(PIN_LED_ROSSO, 1);   //led on
 		}
 		else
-		{
-			gpioWrite(PIN_LED_ROSSO, 0);   //led off
+		{	statusLedRosso = 0;
+			if(statusLedRosso != oldStatusLedRosso)
+				gpioWrite(PIN_LED_ROSSO, 0);   //led off
 		}
+
+		oldStatusLedRosso = statusLedRosso;
+
 
 	}
 }
