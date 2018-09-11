@@ -15,12 +15,15 @@
 #include "pin_raspberry.h"
 #include "main.h"
 
+#define		SOGLIA_ERRORI		50
 //--------------------------------------------------
 // variabili extern
 //--------------------------------------------------
 extern char debugSTR[];
 
-
+extern int errorServo;
+extern int errorGyro;
+extern int errorCompass;
 
 //--------------------------------------------------
 // Function declaration
@@ -56,7 +59,7 @@ void *gestioneIO()
 	gpioSetPullUpDown(BUTTON_PIN, PI_PUD_UP);   // Sets a pull-up.
 
 	gpioWrite(PIN_LED_VERDE, 1);   //led on
-	gpioWrite(PIN_LED_ROSSO, 0);   //led on
+	gpioWrite(PIN_LED_ROSSO, 0);   //led off
 
 	while(1)
 	{
@@ -71,6 +74,17 @@ void *gestioneIO()
 			closePigpioLybrary();
 			exit(0);
 		}
+
+
+		if((errorServo > SOGLIA_ERRORI) || (errorGyro > SOGLIA_ERRORI) || (errorCompass > SOGLIA_ERRORI))
+		{
+			gpioWrite(PIN_LED_ROSSO, 1);   //led on
+		}
+		else
+		{
+			gpioWrite(PIN_LED_ROSSO, 0);   //led off
+		}
+
 	}
 }
 

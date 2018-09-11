@@ -118,11 +118,18 @@ void getDistance(unsigned char idSonarSendor)
   gpioWrite(localTrig, 0);
 
 
+ // printf("prima\n");
   while(gpioRead(localEcho) == 0)
-	  clock_gettime(CLOCK_REALTIME, &start);
+  {
 
+	  clock_gettime(CLOCK_REALTIME, &start);
+  }
+//  printf("durante\n");
   while(gpioRead(localEcho) == 1)
+  {
 	  clock_gettime( CLOCK_REALTIME, &stop);
+  }
+ // printf("dopo\n");
 
   stop.tv_nsec += (stop.tv_sec - start.tv_sec)*1000000000;
 
