@@ -100,6 +100,12 @@ void *gestioneCompass()
 		compass_yout = (short)((unsigned short)(i2cReadByteData(i2cHandleHMC5883l,5) << 8) + (unsigned short)i2cReadByteData(i2cHandleHMC5883l,6));
 		compass_zout = (short)((unsigned short)(i2cReadByteData(i2cHandleHMC5883l,3) << 7) + (unsigned short)i2cReadByteData(i2cHandleHMC5883l,8));
 
+		sprintf(debugSTR,"compass_xout: %d", compass_xout);
+		TRACE4(2,"COMPASS",BIANCO,NERO_BG,debugSTR,0);
+		sprintf(debugSTR,"compass_yout: %d", compass_yout);
+		TRACE4(2,"COMPASS",BIANCO,NERO_BG,debugSTR,0);
+		sprintf(debugSTR,"compass_zout: %d", compass_zout);
+		TRACE4(2,"COMPASS",BIANCO,NERO_BG,debugSTR,0);
 
 		compass_xout_scaled = (float)compass_xout / (float)SCALE_COMPASS;
 		compass_yout_scaled = (float)compass_yout / (float)SCALE_COMPASS;
