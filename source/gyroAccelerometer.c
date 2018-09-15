@@ -35,6 +35,9 @@ float accel_zout_scaled = 0;
 float x_rotation = 0;
 float y_rotation = 0;
 
+
+int errorGyro = 0;
+
 //--------------------------------------------------
 // variabili extern
 //--------------------------------------------------
@@ -84,7 +87,7 @@ void *gestioneGyroAccelerometer()
 	int accel_xout = 0;
 	int accel_yout = 0;
 	int accel_zout = 0;
-
+	int probeByte = 0;
 
 	usleep(100000L);
 	initI2C_MPU6050();
@@ -112,7 +115,18 @@ void *gestioneGyroAccelerometer()
 		accel_yout = (((int16_t)mpu6050_readByte(MPU6050_RA_ACCEL_YOUT_H)) << 8) | mpu6050_readByte(MPU6050_RA_ACCEL_YOUT_L);
 		accel_zout = (((int16_t)mpu6050_readByte(MPU6050_RA_ACCEL_ZOUT_H)) << 8) | mpu6050_readByte(MPU6050_RA_ACCEL_ZOUT_L);
 */
-		accel_xout = (short)((unsigned short)(mpu6050_readByte(MPU6050_RA_ACCEL_XOUT_H) << 8) + (unsigned short)mpu6050_readByte(MPU6050_RA_ACCEL_XOUT_L));
+
+		probeByte = mpu6050_readByte(MPU6050_RA_ACCEL_XOUT_H);
+
+		if(probeByte < 0)
+		{
+			//printf("probeByte Gyro: %d\n",probeByte);
+			errorGyro++;
+			continue;
+		}
+		errorGyro = 0;
+
+		accel_xout = (short)((unsigned short)(probeByte << 8) + (unsigned short)mpu6050_readByte(MPU6050_RA_ACCEL_XOUT_L));
 		accel_yout = (short)((unsigned short)(mpu6050_readByte(MPU6050_RA_ACCEL_YOUT_H) << 8) + (unsigned short)mpu6050_readByte(MPU6050_RA_ACCEL_YOUT_L));
 		accel_zout = (short)((unsigned short)(mpu6050_readByte(MPU6050_RA_ACCEL_ZOUT_H) << 8) + (unsigned short)mpu6050_readByte(MPU6050_RA_ACCEL_ZOUT_L));
 

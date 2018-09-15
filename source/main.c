@@ -78,6 +78,8 @@ int main(int argc, char **argv)
 		 TRACE4(1,"MAIN",BIANCO,NERO_BG,"Setup pigpio OK ",0);
 	}
 
+	//printf("Pigpio version: %d\n",gpioVersion());
+
 
 	//signal(SIGINT, sig_handler);
 	gpioSetSignalFunc(SIGINT, sig_handler);

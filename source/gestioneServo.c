@@ -31,6 +31,8 @@ unsigned short freqPWMServo = 50;
 
 unsigned short posServo0 = 0;
 unsigned short posServo1 = 0;
+
+int errorServo = 0;
 //--------------------------------------------------
 // variabili extern
 //--------------------------------------------------
@@ -73,6 +75,7 @@ void initI2C_PCA6585()
 //--------------------------------------------------
 void *gestioneServo()
 {
+	int probeByte = 0;
 
 	usleep(100000L);
 	initI2C_PCA6585();
@@ -96,11 +99,22 @@ void *gestioneServo()
 	{
 		usleep(1000000);
 
+		probeByte = i2cReadByteData(i2cHandle_pca6585,LED0_ON_L + 0);
+
+		if(probeByte < 0)
+		{
+			//printf("probeByte Gyro: %d\n",probeByte);
+			errorServo++;
+			continue;
+		}
+		errorServo = 0;
+
+
 		posServo0 = i2cReadWordData(i2cHandle_pca6585,LED0_ON_L+4*0 + 2); //leggo solo off dato chemetto on a 0
 		posServo1 = i2cReadWordData(i2cHandle_pca6585,LED0_ON_L+4*1 + 2); //leggo solo off dato chemetto on a 0
 
-		printf("%d %d %d %d\n",i2cReadByteData(i2cHandle_pca6585,LED0_ON_L + 0),i2cReadByteData(i2cHandle_pca6585,LED0_ON_L+ 1),i2cReadByteData(i2cHandle_pca6585,LED0_ON_L+ 2),i2cReadByteData(i2cHandle_pca6585,LED0_ON_L + 3));
-		printf("posServo0: %d\n",posServo0);
+		//printf("%d %d %d %d\n",i2cReadByteData(i2cHandle_pca6585,LED0_ON_L + 0),i2cReadByteData(i2cHandle_pca6585,LED0_ON_L+ 1),i2cReadByteData(i2cHandle_pca6585,LED0_ON_L+ 2),i2cReadByteData(i2cHandle_pca6585,LED0_ON_L + 3));
+	//	printf("posServo0: %d\n",posServo0);
 
 		//loopPWMServo();
 	}
