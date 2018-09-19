@@ -109,7 +109,7 @@ void *gestioneGyroAccelerometer()
 
 	while(1)
 	{
-		usleep(100000);
+		usleep(10000);
 
 		/*accel_xout = (((int16_t)mpu6050_readByte(MPU6050_RA_ACCEL_XOUT_H)) << 8) | mpu6050_readByte(MPU6050_RA_ACCEL_XOUT_L);
 		accel_yout = (((int16_t)mpu6050_readByte(MPU6050_RA_ACCEL_YOUT_H)) << 8) | mpu6050_readByte(MPU6050_RA_ACCEL_YOUT_L);

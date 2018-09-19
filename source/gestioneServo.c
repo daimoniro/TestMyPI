@@ -97,7 +97,7 @@ void *gestioneServo()
 
 	while(1)
 	{
-		usleep(1000000);
+		usleep(100000);
 
 		probeByte = i2cReadByteData(i2cHandle_pca6585,LED0_ON_L + 0);
 
@@ -237,6 +237,8 @@ void setSpeedServo(unsigned short servoSpeed_0, unsigned short servoSpeed_1)
 {
 	 PCA9685_setPWM(0, 0, servoSpeed_0);
 	 PCA9685_setPWM(1, 0, servoSpeed_1);
+	 PCA9685_setPWM(2, 0, servoSpeed_0);
+	 PCA9685_setPWM(3, 0, servoSpeed_1);
 }
 
 //--------------------------------------------------

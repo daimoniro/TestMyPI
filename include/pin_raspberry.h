@@ -12,7 +12,7 @@
 
 // io
 #define PIN_LED_VERDE 		17
-#define PIN_LED_ROSSO 		18 //da provare
+#define PIN_LED_ROSSO 		18
 #define BUTTON_PIN		27
 
 

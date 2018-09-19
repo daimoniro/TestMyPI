@@ -82,13 +82,28 @@ void *gestioneIO()
 		{
 			statusLedRosso = 1;
 			if(statusLedRosso != oldStatusLedRosso)
+			{
+				sprintf(debugSTR,"Stato LED Rosso --> %d", statusLedRosso);
+				TRACE4(1,"IO",BIANCO,NERO_BG,debugSTR,0);
+
 				gpioWrite(PIN_LED_ROSSO, 1);   //led on
+			}
 		}
 		else
 		{	statusLedRosso = 0;
 			if(statusLedRosso != oldStatusLedRosso)
+			{
+				sprintf(debugSTR,"Stato LED Rosso --> %d", statusLedRosso);
+				TRACE4(1,"IO",BIANCO,NERO_BG,debugSTR,0);
+
 				gpioWrite(PIN_LED_ROSSO, 0);   //led off
+
+			}
 		}
+
+		sprintf(debugSTR,"errorServo: %d errorGyro: %d errorCompass: %d", errorServo,errorGyro,errorCompass);
+		TRACE4(2,"IO",BIANCO,NERO_BG,debugSTR,0);
+
 
 		oldStatusLedRosso = statusLedRosso;
 
