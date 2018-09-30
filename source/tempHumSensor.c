@@ -77,11 +77,11 @@ void *TemperatureHumManagement()
 	int returnFunz = 0;
 
 
-	system("sudo modprobe w1-gpio");
-	system("sudo modprobe w1-therm");
+	//system("sudo modprobe w1-gpio");
+	//system("sudo modprobe w1-therm");
 
 
-	sprintf(pathDeviceTemperatureSensor,"/sys/bus/w1/devices/10-000800bc1a13/w1_slave");
+	sprintf(pathDeviceTemperatureSensor,"/sys/bus/w1/devices/28-00000620f601/w1_slave");
 	//sprintf(pathDeviceTemperatureSensor,"/sys/bus/w1/devices/%s/w1_slave",cfg.idTemperatureSensor);
 
 	valoriTemperatura[0] = 0xFFFF;
@@ -100,6 +100,7 @@ void *TemperatureHumManagement()
 	{
 		usleep(100000);
 		time(&now);
+		printf("now: %d\n",now);
 
 
 		if((now % FREQUENZA_LETTURA_TEMPERATURE) == 0)
@@ -129,7 +130,7 @@ void *TemperatureHumManagement()
 			}
 
 
-			read_dht_data();
+			//read_dht_data();
 
 
 		}
@@ -184,7 +185,7 @@ int letturaTemperatura(int idSensore)
 
 	while(fgets(Line,256,SensoreFile)!=NULL)
 	{
-		//printf("Leggo %s",Line);
+		printf("Leggo %s da file %s\n",Line,pathDeviceTemperatureSensor);
 
 		//Leggo 15 00 4b 46 7f ff 0b 10 a4 : crc=a4 YES
 		//Leggo 15 00 4b 46 7f ff 0b 10 a4 t=1312

@@ -71,6 +71,7 @@ void *gestioneIO()
 		sprintf(debugSTR,"Stato PIN %d --> %d", BUTTON_PIN,gpioRead(BUTTON_PIN));
 		TRACE4(1,"IO",BIANCO,NERO_BG,debugSTR,0);
 
+		continue;
 		if(gpioRead(BUTTON_PIN) == 0)
 		{
 			closePigpioLybrary();

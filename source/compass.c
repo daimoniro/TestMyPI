@@ -118,7 +118,7 @@ void *gestioneCompass()
 
 	while(1)
 	{
-		usleep(10000);
+		usleep(100000);
 
 		unsigned char statusRegister  = i2cReadByteData(i2cHandleHMC5883l,6);
 
@@ -193,8 +193,8 @@ void *gestioneCompass()
 float azimuth(short a, short b)
 {
   float azimuth = atan2((float)a,(float)b) * 180.0/PI;
-  //return azimuth < 0?360 + azimuth:azimuth;
-  return azimuth ;
+  return azimuth < 0?360 + azimuth:azimuth;
+  //return azimuth ;
 }
 
 //--------------------------------------------------
